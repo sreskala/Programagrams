@@ -1,0 +1,1 @@
+medium, checking, updating, errors, levels
