@@ -10,6 +10,8 @@ namespace Programagrams
 {
     public class ProgramUI
     {
+        //int tracker
+        int tracker = 0;
         public void Run()
         {
             DisplayGreeting();
@@ -21,6 +23,7 @@ namespace Programagrams
 
             while(keepPlaying)
             {
+                
                 //easy text
                 string easyPath = @"C:\Users\samsa\source\repos\Programagrams\Easy.txt";
                 //medium text
@@ -35,33 +38,37 @@ namespace Programagrams
                     "1. Easy \n" +
                     "2. Medium \n" +
                     "3. Hard \n" +
-                    "4. (Possible Insane?) \n" +
-                    "5. (Possible random as well) \n");
+                    "4. Insane \n" +
+                    "5. Random Difficulty \n");
+
+                Console.WriteLine($"You have gotten {tracker} words right this session.");
 
                 bool correctChoice = false;
+                bool keepTrack = false;
 
                 while(!correctChoice)
                 {
                     string choice = Console.ReadLine();
                     switch (choice)
                     {
+                        
                         case "1":
-                            ModeChoose(easyPath);
+                            keepTrack = ModeChoose(easyPath);
                             Console.ReadLine();
                             correctChoice = true;
                             break;
                         case "2":
-                            ModeChoose(mediumPath);
+                            keepTrack = ModeChoose(mediumPath);
                             Console.ReadLine();
                             correctChoice = true;
                             break;
                         case "3":
-                            ModeChoose(hardPath);
+                            keepTrack = ModeChoose(hardPath);
                             Console.ReadLine();
                             correctChoice = true;
                             break;
                         case "4":
-                            ModeChoose(insanePath);
+                            keepTrack = ModeChoose(insanePath);
                             Console.ReadLine();
                             correctChoice = true;
                             break;
@@ -69,7 +76,7 @@ namespace Programagrams
                             string[] modes = { easyPath, mediumPath, hardPath, insanePath };
                             Random rand = new Random();
                             int chooseMode = rand.Next(modes.Length - 1);
-                            ModeChoose(modes[chooseMode]);
+                            keepTrack = ModeChoose(modes[chooseMode]);
                             Console.ReadLine();
                             correctChoice = true;
                             break;
@@ -81,19 +88,33 @@ namespace Programagrams
                 }
                 
 
-                Console.WriteLine("Would you like to play again (y/n) ?");
-                string playChoice = Console.ReadLine().ToLower().Trim();
+                
 
-                if (playChoice == "y")
+                bool playAgain = true;
+
+                while (playAgain)
                 {
-                    keepPlaying = true;
-                } else if(playChoice == "n")
-                {
-                    keepPlaying = false;
-                } else
-                {
-                    Console.WriteLine("Not a valid choice!");
+                    Console.WriteLine("Would you like to play again (y/n) ?");
+                    string playChoice = Console.ReadLine().ToLower().Trim();
+
+                    if (playChoice == "y")
+                    {
+                        keepPlaying = true;
+                        playAgain = false;
+                    }
+                    else if (playChoice == "n")
+                    {
+                        keepPlaying = false;
+                        playAgain = false;
+                    }
+                    else
+                    {
+                        Console.WriteLine("Not a valid choice! Please enter only 'y' or 'n'.");
+                        playAgain = true;
+                    }
                 }
+
+                
             }
             
         }
@@ -115,7 +136,7 @@ namespace Programagrams
             }
             return new string(array);
         }
-        public void ModeChoose(string path)
+        public bool ModeChoose(string path)
         {
             string text = File.ReadAllText(path);
             
@@ -152,11 +173,13 @@ namespace Programagrams
             if (wasGuessed)
             {
                 Console.WriteLine("You win!");
+                tracker++;
             } else
             {
                 Console.WriteLine("You lose");
             }
-            
+
+            return wasGuessed;
         }
 
         public void DisplayGreeting()
